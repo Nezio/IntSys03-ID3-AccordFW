@@ -20,6 +20,9 @@ namespace IntSys03_ID3_AccordFW
         public string inputPath;
         public string outputPath;
 
+        private Codification codebook;
+        private string answerAttribute;
+
         public Form1()
         {
             InitializeComponent();
@@ -30,13 +33,19 @@ namespace IntSys03_ID3_AccordFW
         {
             lblStatus.Text = "Working...";
 
+            // debug paths
+            trainingPath = "D://Workbench//houseDataTraining.csv";
+            inputPath = "D://Workbench//houseData.csv";
+            outputPath = "D://Workbench//1.csv";
+
+
             // load training data
             DataTable dtDataTraining = CSVtoDataTable(trainingPath);
 
-            string answerAttribute = dtDataTraining.Columns[dtDataTraining.Columns.Count - 1].ToString();   // "Buy" in this example
+            answerAttribute = dtDataTraining.Columns[dtDataTraining.Columns.Count - 1].ToString();   // "Buy" in this example
 
             // Create a new codification codebook to convert strings into integer symbols
-            var codebook = new Codification(dtDataTraining);
+            codebook = new Codification(dtDataTraining);
 
             // translate our training data into integer symbols using our codebook:
             DataTable symbols = codebook.Apply(dtDataTraining);
@@ -62,6 +71,8 @@ namespace IntSys03_ID3_AccordFW
             // Compute the training error when predicting training instances
             //double error = new ZeroOneLoss(outputs).Loss(tree.Decide(inputs));
 
+            DrawTree(tree);
+
 
             // load data to process
             DataTable dtData = CSVtoDataTable(inputPath);
@@ -86,7 +97,17 @@ namespace IntSys03_ID3_AccordFW
                 int predicted = tree.Decide(query);
 
                 // translate back from codebook
-                allAnswers.Add(codebook.Revert(answerAttribute, predicted));
+                try
+                {
+                    allAnswers.Add(codebook.Revert(answerAttribute, predicted));
+                }
+                catch(Exception exc)
+                {
+                    Debug.WriteLine("Don't worry about exception above. :)");
+
+                    allAnswers.Add("unknown");
+                }
+                
             }
 
 
@@ -100,6 +121,17 @@ namespace IntSys03_ID3_AccordFW
             DataTableToCSV(dtData, outputPath);     // save
 
             lblStatus.Text = "Done! Check output file.";
+
+
+
+            // debug
+            //string[] words;
+            //int[] codes = { 0, 1, 2 };
+            //words = codebook.Revert("Price" , codes);
+            //
+            //var x = codebook.Columns[0];
+            
+
         }
 
         public void DisplayTable(DataTable dt)
@@ -212,5 +244,49 @@ namespace IntSys03_ID3_AccordFW
 
             tboxOutputPath.Text = outputPath;
         }
+
+        private void DrawTree(DecisionTree tree)
+        {
+            string columnCode = tree.Root.Branches[0].ToString()[0].ToString();
+            string column = codebook.Columns[int.Parse(columnCode)].ColumnName;
+            
+            Debug.WriteLine(column);
+            PreorderTraverse(tree.Root.Branches);
+        }
+
+        private void PreorderTraverse(DecisionBranchNodeCollection branches)
+        {
+            foreach(DecisionNode branch in branches)
+            {
+                string columnCode = branch.ToString()[0].ToString();
+                string column = codebook.Columns[int.Parse(columnCode)].ColumnName;
+                int branchCode = int.Parse(branch.ToString()[branch.ToString().Length - 1].ToString());
+                if (branch.IsLeaf)
+                {
+                    string leafNode;
+                    if (branch.Output == null)
+                        leafNode = "unknown";
+                    else
+                        leafNode = codebook.Revert(answerAttribute, branch.Output.Value);
+                    
+                    for(int i = 0; i < branch.GetHeight(); i++)
+                        Debug.Write("\t");
+                    Debug.WriteLine(codebook.Revert(column, branchCode) + " -> " + leafNode);
+                }
+                else
+                {
+                    string childCode = branch.Branches[0].ToString()[0].ToString();
+                    string childNode = codebook.Columns[int.Parse(childCode)].ColumnName;
+
+                    for (int i = 0; i < branch.GetHeight(); i++)
+                        Debug.Write("\t");
+                    Debug.WriteLine(codebook.Revert(column, branchCode) + " -> " + childNode);
+
+                    PreorderTraverse(branch.Branches);
+                }
+            }
+        }
+
+
     }
 }
