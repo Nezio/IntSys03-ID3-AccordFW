@@ -31,6 +31,9 @@ namespace IntSys03_ID3_AccordFW
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            // debug
+            GenerateData();
+
             lblStatus.Text = "Working...";
 
             // debug paths
@@ -285,6 +288,36 @@ namespace IntSys03_ID3_AccordFW
                     PreorderTraverse(branch.Branches);
                 }
             }
+        }
+
+        private void GenerateData()
+        {
+            int maxRows = 10;
+            string[] columns = { "Price", "Size", "Location", "Air pollution", "Noise pollution", "Water", "Electricity", "Heating", "Internet" };
+            List<string[]> values = new List<string[]>();
+            values.Add(new string[] { "cheap", "medium", "expensive" });
+            values.Add(new string[] { "small", "medium", "big" });
+            values.Add(new string[] { "village", "town", "city" });
+            values.Add(new string[] { "none", "low", "medium", "high" });
+            values.Add(new string[] { "none", "low", "medium", "high" });
+            
+            DataTable dt = new DataTable();
+            foreach (string column in columns)
+            {
+                dt.Columns.Add(column);
+            }
+
+            DataRow dr = dt.NewRow();
+            //for (int i = 0; i < headers.Length; i++)
+            //{
+            //    dr[i] = rows[i];
+            //}
+            dt.Rows.Add(dr);
+
+            //debug
+            DisplayTable(dt);
+
+            //DataTableToCSV(dt, "D://Workbench//generated.csv");
         }
 
 
