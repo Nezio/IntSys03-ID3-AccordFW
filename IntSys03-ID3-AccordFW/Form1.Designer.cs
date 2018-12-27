@@ -86,27 +86,27 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(24, 25);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(111, 13);
+            this.label1.Size = new System.Drawing.Size(117, 13);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Training data .csv file:";
+            this.label1.Text = "Training data file (.csv):";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(24, 65);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(50, 13);
+            this.label2.Size = new System.Drawing.Size(79, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Input file:";
+            this.label2.Text = "Input file (.csv):";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(24, 105);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 13);
+            this.label3.Size = new System.Drawing.Size(82, 13);
             this.label3.TabIndex = 6;
-            this.label3.Text = "Output file:";
+            this.label3.Text = "Output location:";
             // 
             // tboxTrainingPath
             // 

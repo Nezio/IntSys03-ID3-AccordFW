@@ -1,0 +1,5 @@
+Price,Size,Location,Air pollution
+expensive,small,village,high
+cheap,medium,town,low
+medium,medium,city,high
+expensive,big,city,medium

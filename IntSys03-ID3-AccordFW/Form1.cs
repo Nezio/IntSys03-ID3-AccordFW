@@ -31,15 +31,16 @@ namespace IntSys03_ID3_AccordFW
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            // debug
-            GenerateData();
-
             lblStatus.Text = "Working...";
 
             // debug paths
-            trainingPath = "D://Workbench//houseDataTraining.csv";
-            inputPath = "D://Workbench//houseData.csv";
-            outputPath = "D://Workbench//1.csv";
+            trainingPath = "D://Workbench//Data training.csv";
+            inputPath = "D://Workbench//Data.csv";
+            outputPath = "D://Workbench//output.csv";
+
+            // debug
+            GenerateData();
+
 
 
             // load training data
@@ -74,7 +75,7 @@ namespace IntSys03_ID3_AccordFW
             // Compute the training error when predicting training instances
             //double error = new ZeroOneLoss(outputs).Loss(tree.Decide(inputs));
 
-            DrawTree(tree);
+            TreeToTxt(tree, "D://Workbench//tree.txt");
 
 
             // load data to process
@@ -104,7 +105,7 @@ namespace IntSys03_ID3_AccordFW
                 {
                     allAnswers.Add(codebook.Revert(answerAttribute, predicted));
                 }
-                catch(Exception exc)
+                catch
                 {
                     Debug.WriteLine("Don't worry about exception above. :)");
 
@@ -124,21 +125,11 @@ namespace IntSys03_ID3_AccordFW
             DataTableToCSV(dtData, outputPath);     // save
 
             lblStatus.Text = "Done! Check output file.";
-
-
-
-            // debug
-            //string[] words;
-            //int[] codes = { 0, 1, 2 };
-            //words = codebook.Revert("Price" , codes);
-            //
-            //var x = codebook.Columns[0];
             
-
         }
 
         public void DisplayTable(DataTable dt)
-        {
+        { // draw table in output window for debugging
             foreach(var name in dt.Columns)
             {
                 Debug.Write(name + "\t\t\t");
@@ -157,7 +148,7 @@ namespace IntSys03_ID3_AccordFW
         }
 
         public static DataTable CSVtoDataTable(string strFilePath)
-        {
+        { // read from .csv file to DataTable
             StreamReader sr = new StreamReader(strFilePath);
             string[] headers = sr.ReadLine().Split(',');
             DataTable dt = new DataTable();
@@ -179,7 +170,7 @@ namespace IntSys03_ID3_AccordFW
         }
 
         public static void DataTableToCSV(DataTable dtDataTable, string strFilePath)
-        {
+        { // output to .csv file from given DataTable
             StreamWriter sw = new StreamWriter(strFilePath, false);
             //headers  
             for (int i = 0; i < dtDataTable.Columns.Count; i++)
@@ -219,42 +210,54 @@ namespace IntSys03_ID3_AccordFW
         }
 
         private void btnTrainingPath_Click(object sender, EventArgs e)
-        {
+        { // set training file path
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CSV files (*.csv)|*.csv;|All files (*.*)|*.*";
             ofd.ShowDialog();
             trainingPath = ofd.FileName;
 
-            tboxTrainingPath.Text = trainingPath;
+            tboxTrainingPath.Text = trainingPath;   // update label
         }
 
         private void btnDataPath_Click(object sender, EventArgs e)
-        {
+        { // set data file path
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CSV files (*.csv)|*.csv;|All files (*.*)|*.*";
             ofd.ShowDialog();
             inputPath = ofd.FileName;
 
-            tboxInputPath.Text = inputPath;
+            tboxInputPath.Text = inputPath;         // update label
         }
 
         private void btnOutputPath_Click(object sender, EventArgs e)
-        {
+        { // set output file path
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "CSV file (.csv)|*.csv|All files (*.*)|*.*";
             sfd.ShowDialog();
             outputPath = sfd.FileName;
 
-            tboxOutputPath.Text = outputPath;
+            tboxOutputPath.Text = outputPath;       // update label
         }
 
         private void DrawTree(DecisionTree tree)
-        {
-            string columnCode = tree.Root.Branches[0].ToString()[0].ToString();
-            string column = codebook.Columns[int.Parse(columnCode)].ColumnName;
+        { // draw generated tree in output window for debugging
+            string columnCode = tree.Root.Branches[0].ToString()[0].ToString(); // get root node code as codebook int
+            string column = codebook.Columns[int.Parse(columnCode)].ColumnName; // get root name using from codebook
             
             Debug.WriteLine(column);
-            PreorderTraverse(tree.Root.Branches);
+            PreorderTraverse(tree.Root.Branches);   // start tree traverse 
+        }
+
+        private void TreeToTxt(DecisionTree tree, string filePath)
+        { // output generated tree to .txt file instead of debug window
+            string columnCode = tree.Root.Branches[0].ToString()[0].ToString(); // get root node code as codebook int
+            string column = codebook.Columns[int.Parse(columnCode)].ColumnName; // get root name using from codebook
+
+            StreamWriter file = new StreamWriter(filePath, false);  // open file (no append)
+            file.WriteLine(column); // write root to file
+            file.Close();   // close file
+
+            PreorderTraverse(tree.Root.Branches, filePath); // start tree traverse
         }
 
         private void PreorderTraverse(DecisionBranchNodeCollection branches)
@@ -274,6 +277,7 @@ namespace IntSys03_ID3_AccordFW
                     
                     for(int i = 0; i < branch.GetHeight(); i++)
                         Debug.Write("\t");
+
                     Debug.WriteLine(codebook.Revert(column, branchCode) + " -> " + leafNode);
                 }
                 else
@@ -283,6 +287,7 @@ namespace IntSys03_ID3_AccordFW
 
                     for (int i = 0; i < branch.GetHeight(); i++)
                         Debug.Write("\t");
+
                     Debug.WriteLine(codebook.Revert(column, branchCode) + " -> " + childNode);
 
                     PreorderTraverse(branch.Branches);
@@ -290,34 +295,77 @@ namespace IntSys03_ID3_AccordFW
             }
         }
 
-        private void GenerateData()
+        private void PreorderTraverse(DecisionBranchNodeCollection branches, string filePath)
         {
-            int maxRows = 10;
-            string[] columns = { "Price", "Size", "Location", "Air pollution", "Noise pollution", "Water", "Electricity", "Heating", "Internet" };
-            List<string[]> values = new List<string[]>();
-            values.Add(new string[] { "cheap", "medium", "expensive" });
-            values.Add(new string[] { "small", "medium", "big" });
-            values.Add(new string[] { "village", "town", "city" });
-            values.Add(new string[] { "none", "low", "medium", "high" });
-            values.Add(new string[] { "none", "low", "medium", "high" });
-            
-            DataTable dt = new DataTable();
-            foreach (string column in columns)
+            foreach (DecisionNode branch in branches)
             {
-                dt.Columns.Add(column);
+                string columnCode = branch.ToString()[0].ToString();
+                string column = codebook.Columns[int.Parse(columnCode)].ColumnName;
+                int branchCode = int.Parse(branch.ToString()[branch.ToString().Length - 1].ToString());
+                
+                if (branch.IsLeaf)
+                {
+                    string leafNode;
+                    StreamWriter file = new StreamWriter(filePath, true);
+
+                    if (branch.Output == null)
+                        leafNode = "unknown";
+                    else
+                        leafNode = codebook.Revert(answerAttribute, branch.Output.Value);
+
+                    for (int i = 0; i < branch.GetHeight(); i++)
+                        file.Write("\t");
+
+                    file.WriteLine(codebook.Revert(column, branchCode) + " -> " + leafNode);
+                    file.Close();
+                }
+                else
+                {
+                    string childCode = branch.Branches[0].ToString()[0].ToString();
+                    string childNode = codebook.Columns[int.Parse(childCode)].ColumnName;
+                    StreamWriter file = new StreamWriter(filePath, true);
+
+                    for (int i = 0; i < branch.GetHeight(); i++)
+                        file.Write("\t");
+
+                    file.WriteLine(codebook.Revert(column, branchCode) + " -> " + childNode);
+                    file.Close();
+
+                    PreorderTraverse(branch.Branches, filePath);
+                }
+            }
+        }
+
+        private void GenerateData()
+        { // used internally to generate test data
+            int maxRows = 100;
+
+            DataTable dtSeed = CSVtoDataTable("D://Workbench//seed.csv");
+
+            DataTable dt = new DataTable();
+            foreach (DataColumn column in dtSeed.Columns)
+            {
+                dt.Columns.Add(column.ColumnName);
             }
 
-            DataRow dr = dt.NewRow();
-            //for (int i = 0; i < headers.Length; i++)
-            //{
-            //    dr[i] = rows[i];
-            //}
-            dt.Rows.Add(dr);
-
-            //debug
-            DisplayTable(dt);
-
-            //DataTableToCSV(dt, "D://Workbench//generated.csv");
+            Random r = new Random();
+            for (int j = 0; j < maxRows; j++)
+            {
+                DataRow dr = dt.NewRow();
+                for (int i = 0; i < dtSeed.Columns.Count; i++)
+                {
+                    string value;
+                    do
+                    {
+                        int rand = r.Next(dtSeed.Rows.Count);
+                        value = dtSeed.Rows[rand].ItemArray[i].ToString();
+                    } while (value == "");
+                    dr[i] = value;
+                }
+                dt.Rows.Add(dr);
+            }
+            
+            DataTableToCSV(dt, "D://Workbench//generated.csv");
         }
 
 
