@@ -1,0 +1,23 @@
+Outlook,Temperature,Humidity,Wind,Play tennis
+rain,hot,mild,strong,no
+rain,hot,mild,weak,no
+sunny,cold,weak,strong,no
+rain,mild,mild,weak,no
+cloudy,mild,strong,strong,no
+sunny,cold,strong,weak,no
+cloudy,hot,mild,mild,yes
+sunny,cold,weak,none,yes
+cloudy,hot,mild,weak,yes
+sunny,mild,weak,mild,yes
+rain,hot,strong,strong,no
+cloudy,mild,strong,none,yes
+cloudy,cold,strong,mild,yes
+sunny,hot,strong,none,no
+sunny,mild,strong,strong,no
+cloudy,mild,strong,none,yes
+cloudy,hot,strong,none,no
+sunny,hot,strong,strong,no
+sunny,mild,mild,weak,yes
+sunny,hot,mild,strong,no
+sunny,hot,mild,weak,yes
+sunny,hot,weak,weak,yes

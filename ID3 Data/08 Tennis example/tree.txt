@@ -1,0 +1,14 @@
+Wind
+	strong -> no
+	weak -> Outlook
+		rain -> no
+		sunny -> Temperature
+			hot -> yes
+			cold -> no
+			mild -> yes
+		cloudy -> yes
+	mild -> yes
+	none -> Temperature
+		hot -> no
+		cold -> yes
+		mild -> yes

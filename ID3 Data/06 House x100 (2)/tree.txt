@@ -1,0 +1,19 @@
+Water
+	yes -> Price
+		cheap -> yes
+		medium -> Heating
+			no -> Location
+				village -> no
+				town -> no
+				city -> Noise pollution
+					none -> unknown
+					low -> yes
+					high -> no
+					medium -> unknown
+			yes -> Air pollution
+				none -> yes
+				low -> yes
+				high -> no
+				medium -> unknown
+		expensive -> no
+	no -> no

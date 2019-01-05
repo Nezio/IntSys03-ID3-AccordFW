@@ -1,0 +1,14 @@
+Screen size
+	"10""" -> No
+	13'' -> Keyboard light
+		yes -> No
+		no -> CPU
+			i5 -> Cena
+				cheap -> Yes
+				medium -> unknown
+				expensive -> No
+			Core2Duo -> No
+			i3 -> No
+			i7 -> Yes
+	"15""" -> No
+	"13""" -> Yes

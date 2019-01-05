@@ -1,0 +1,5 @@
+Price,Size,Location,Air pollution,Noise pollution,Water,Electricity,Heating,Internet
+cheap,small,village,none,none,yes,yes,yes,yes
+medium,medium,town,low,low,no,no,no,no
+expensive,big,city,medium,medium,,,,
+,,,high,high,,,,

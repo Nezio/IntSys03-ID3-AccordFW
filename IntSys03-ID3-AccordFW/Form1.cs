@@ -34,12 +34,12 @@ namespace IntSys03_ID3_AccordFW
             lblStatus.Text = "Working...";
 
             // debug paths
-            trainingPath = "D://Workbench//Data training.csv";
-            inputPath = "D://Workbench//Data.csv";
-            outputPath = "D://Workbench//output.csv";
+            //trainingPath = "D://Workbench//Data training.csv";
+            //inputPath = "D://Workbench//Data.csv";
+            //outputPath = "D://Workbench//output.csv";
 
             // debug
-            GenerateData();
+            //GenerateData();
 
 
 
@@ -338,7 +338,7 @@ namespace IntSys03_ID3_AccordFW
 
         private void GenerateData()
         { // used internally to generate test data
-            int maxRows = 100;
+            int maxRows = 200;
 
             DataTable dtSeed = CSVtoDataTable("D://Workbench//seed.csv");
 

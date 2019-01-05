@@ -1,0 +1,8 @@
+Tip,Cena,CPU,GPU,Screen size,Year,Keyboard light,Disc,Disc size,Battery
+Pro,cheap,i3,IntelHD3000,"10""",2009,yes,HDD,120,1h
+Air,medium,i5,IntelHD4000,13'',2010,no,SSD,128,2h
+,expensive,i7,IntelHD5000,"15""",2011,,,240,3h
+,,Core2Duo,,,2012,,,256,4h
+,,,,,2015,,,500,5h
+,,,,,2016,,,512,6h
+,,,,,2017,,,1024,7h

@@ -1,0 +1,19 @@
+Water
+	yes -> Price
+		cheap -> yes
+		medium -> Internet
+			no -> Air pollution
+				none -> no
+				high -> no
+				medium -> no
+				low -> yes
+			yes -> Location
+				village -> no
+				city -> Noise pollution
+					none -> yes
+					medium -> yes
+					low -> yes
+					high -> no
+				town -> yes
+		expensive -> no
+	no -> no
